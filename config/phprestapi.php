@@ -1,12 +1,16 @@
 <?php
-require_once "../config/koneksi.php";
+include "../config/koneksi.php";
+
+?>
+<?php
+
    if(function_exists($_GET['function'])) {
          $_GET['function']();
       }   
    function get_user()
    {
-      global $connect;      
-      $query = $connect->query("SELECT * FROM user");            
+      global $koneksi1;      
+      $query = mysqli_query($koneksi1,"SELECT * FROM user ");            
       while($row=mysqli_fetch_object($query))
       {
          $data[] =$row;
@@ -20,15 +24,14 @@ require_once "../config/koneksi.php";
       echo json_encode($response);
    }   
    
-   function get_user_id()
+   function get_id_user()
    {
-      global $connect;
+      global $koneksi1;
       if (!empty($_GET["id_user"])) {
-         $id = $_GET["id_user"];      
+         $id_user = $_GET["id_user"];      
       }            
-      $query ="SELECT * FROM user WHERE id_user= $id";      
-      $result = $connect->query($query);
-      while($row = mysqli_fetch_object($result))
+      $query = mysqli_query($koneksi1,"SELECT * FROM user WHERE id_user = '$id_user'");      
+      while($row = mysqli_fetch_object($query))
       {
          $data[] = $row;
       }            
@@ -50,14 +53,14 @@ require_once "../config/koneksi.php";
       echo json_encode($response);
        
    }
-   function insert_user()
+   function insert_id_user()
       {
-         global $connect;   
+         global $koneksi1;   
          $check = array('id_user' => '', 'nama_user' => '', 'username' => '', 'pass_user' => '', 'level' => '');
          $check_match = count(array_intersect_key($_POST, $check));
          if($check_match == count($check)){
          
-               $result = mysqli_query($connect, "INSERT INTO user SET
+               $result = mysqli_query($koneksi1, "INSERT INTO user SET
                id_user = '$_POST[id_user]',
                nama_user = '$_POST[nama_user]',
                username = '$_POST[username]',
@@ -87,21 +90,21 @@ require_once "../config/koneksi.php";
          header('Content-Type: application/json');
          echo json_encode($response);
       }
-   function update_user()
+   function update_id_user()
       {
-         global $connect;
-         if (!empty($_GET["id"])) {
-         $id = $_GET["id"];      
+         global $koneksi1;
+         if (!empty($_GET["id_user"])) {
+         $id_user = $_GET["id_user"];      
       }   
-         $check = array('id_user' => '', 'nama_user' => '', 'username' => '', 'pass_user' => '', 'level' => '');
+         $check = array('id_user' => '','username' => '','nama_user' => '', 'pass_user' => '', 'level' => '');
          $check_match = count(array_intersect_key($_POST, $check));         
          if($check_match == count($check)){
          
-              $result = mysqli_query($connect, "UPDATE user SET               
-               nama_user = '$_POST[nama_user]',
+              $result = mysqli_query($koneksi1, "UPDATE user SET               
                username = '$_POST[username]',
+               nama_user = '$_POST[nama_user]',
                pass_user = '$_POST[pass_user]',
-               level = '$_POST[level]' WHERE id_user = $id");
+               level = '$_POST[level]' WHERE id_user = $id_user");
          
             if($result)
             {
@@ -121,18 +124,18 @@ require_once "../config/koneksi.php";
             $response=array(
                      'status' => 0,
                      'message' =>'Wrong Parameter',
-                     'data'=> $id
+                     'data'=> $id_user
                   );
          }
          header('Content-Type: application/json');
          echo json_encode($response);
       }
-   function delete_user()
+   function delete_id_user()
    {
-      global $connect;
-      $id = $_GET['id'];
-      $query = "DELETE FROM user WHERE id_user=".$id;
-      if(mysqli_query($connect, $query))
+      global $koneksi1;
+      $id_user = $_GET['id_user'];
+      $query = "DELETE FROM user WHERE id_user=".$id_user;
+      if(mysqli_query($koneksi1, $query))
       {
          $response=array(
             'status' => 1,
